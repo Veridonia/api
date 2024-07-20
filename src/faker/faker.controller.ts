@@ -5,9 +5,14 @@ import { FakerService } from './faker.service';
 export class FakerController {
   constructor(private readonly fakerService: FakerService) {}
 
-  @Post('posts')
-  async seed(@Query('count') count: number) {
-    await this.fakerService.seedPosts(count);
-    return { message: `${count} posts created` };
+  @Post('seed')
+  async seed(
+    @Query('postCount') postCount: number,
+    @Query('categoryCount') categoryCount: number,
+  ) {
+    await this.fakerService.seedDatabase(postCount, categoryCount);
+    return {
+      message: `${postCount} posts and ${categoryCount} categories created`,
+    };
   }
 }

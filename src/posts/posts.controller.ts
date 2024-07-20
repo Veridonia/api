@@ -22,8 +22,21 @@ export class PostsController {
   }
 
   @Get()
-  async findAll(@Query('category') category?: string) {
-    return this.postsService.findAll(category);
+  async findAll(
+    @Query('category') category?: string,
+    @Query('limit') limit?: number,
+    @Query('page') page?: number,
+  ) {
+    return this.postsService.findAll(category, limit, page);
+  }
+
+  @Get('totalPages')
+  async getTotalPages(
+    @Query('category') category?: string,
+    @Query('limit') limit = 10,
+  ) {
+    const totalPages = await this.postsService.getTotalPages(category, limit);
+    return { totalPages };
   }
 
   @Get(':id')

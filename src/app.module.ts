@@ -6,6 +6,8 @@ import { PostsModule } from './posts/posts.module';
 import { FakerModule } from './faker/faker.module';
 import * as dotenv from 'dotenv';
 import { CategoriesModule } from './categories/categories.module';
+import { UsersModule } from './users/users.module';
+import { SessionsModule } from './sessions/sessions.module';
 
 dotenv.config();
 
@@ -15,6 +17,8 @@ dotenv.config();
     PostsModule,
     FakerModule,
     CategoriesModule,
+    UsersModule,
+    SessionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

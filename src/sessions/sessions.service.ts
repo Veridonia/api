@@ -1,19 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { Model, Types, Document } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 import { Session } from './schemas/session.schema';
 import { SoftDeleteModel } from 'mongoose-delete';
+import { IPAddressesService } from '../ip-addresses/ip-addresses.service';
 
 @Injectable()
 export class SessionsService {
   constructor(
     @InjectModel('Session')
     private readonly sessionModel: SoftDeleteModel<Session>,
+    private readonly ipAddressesService: IPAddressesService,
   ) {}
 
-  async startGuestSession(): Promise<Session> {
+  async startGuestSession(ip: string): Promise<Session> {
     const sessionId = uuidv4();
-    const newSession = new this.sessionModel({ sessionId, isGuest: true });
+    const ipAddress = await this.ipAddressesService.findOrCreate(ip);
+    const newSession = new this.sessionModel({
+      sessionId,
+      isGuest: true,
+      ipAddress: ipAddress._id,
+    });
     return newSession.save();
   }
 
@@ -22,6 +30,6 @@ export class SessionsService {
   }
 
   async findSession(sessionId: string): Promise<Session | null> {
-    return this.sessionModel.findOne({ sessionId });
+    return this.sessionModel.findOne({ sessionId }).populate('ipAddress');
   }
 }

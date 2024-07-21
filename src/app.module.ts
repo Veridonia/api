@@ -8,6 +8,7 @@ import * as dotenv from 'dotenv';
 import { CategoriesModule } from './categories/categories.module';
 import { UsersModule } from './users/users.module';
 import { SessionsModule } from './sessions/sessions.module';
+import { IPAddressesModule } from './ip-addresses/ip-addresses.module';
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ dotenv.config();
     CategoriesModule,
     UsersModule,
     SessionsModule,
+    IPAddressesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

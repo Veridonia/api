@@ -7,8 +7,13 @@ import {
   HttpStatus,
   Logger,
   Param,
+  BadRequestException,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { SessionsService } from './sessions.service';
+import { CreateSessionDto } from './dto/create-session.dto';
+import { ChangeUsernameDto } from './dto/change-username.dto';
 
 @Controller('sessions')
 export class SessionsController {
@@ -17,8 +22,8 @@ export class SessionsController {
   constructor(private readonly sessionsService: SessionsService) {}
 
   @Post()
-  async createSession(@Body() body: { ip: string }) {
-    const { ip } = body;
+  async createSession(@Body() createSessionDto: CreateSessionDto) {
+    const { ip } = createSessionDto;
 
     this.logger.log(`Received create session action`);
     this.logger.log(`IP Address: ${ip}`);
@@ -37,10 +42,7 @@ export class SessionsController {
 
     if (!sessionId) {
       this.logger.error('No session ID provided');
-      return {
-        statusCode: HttpStatus.BAD_REQUEST,
-        message: 'No session ID provided',
-      };
+      throw new BadRequestException('No session ID provided');
     }
 
     await this.sessionsService.endGuestSession(sessionId);
@@ -87,9 +89,9 @@ export class SessionsController {
   @Post('change-username/:sessionId')
   async changeUsername(
     @Param('sessionId') sessionId: string,
-    @Body() body: { newUsername: string },
+    @Body() changeUsernameDto: ChangeUsernameDto,
   ) {
-    const { newUsername } = body;
+    const { newUsername } = changeUsernameDto;
 
     this.logger.log(`New Username: ${newUsername}`);
 

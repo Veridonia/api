@@ -12,5 +12,6 @@ import { IPAddressesModule } from 'src/ip-addresses/ip-addresses.module';
   ],
   providers: [SessionsService],
   controllers: [SessionsController],
+  exports: [SessionsService],
 })
 export class SessionsModule {}

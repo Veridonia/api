@@ -9,8 +9,13 @@ export class FakerController {
   async seed(
     @Query('postCount') postCount: number,
     @Query('categoryCount') categoryCount: number,
+    @Query('sessionsCount') sessionsCount: number,
   ) {
-    await this.fakerService.seedDatabase(postCount, categoryCount);
+    await this.fakerService.seedDatabase(
+      postCount,
+      categoryCount,
+      sessionsCount,
+    );
     return {
       message: `${postCount} posts and ${categoryCount} categories created`,
     };

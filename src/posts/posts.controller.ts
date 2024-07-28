@@ -23,11 +23,11 @@ export class PostsController {
 
   @Get()
   async findAll(
-    @Query('category') category?: string,
+    @Query('categoryName') categoryName?: string,
     @Query('limit') limit?: number,
     @Query('page') page?: number,
   ) {
-    return this.postsService.findAll(category, limit, page);
+    return this.postsService.findAll(categoryName, limit, page);
   }
 
   @Get('totalPages')

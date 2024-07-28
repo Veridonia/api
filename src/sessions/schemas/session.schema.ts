@@ -4,6 +4,7 @@ import { SoftDeleteDocument } from 'mongoose-delete';
 
 export interface Session extends SoftDeleteDocument {
   sessionId: string;
+  username: string;
   isGuest: boolean;
   createdAt: Date;
   ipAddress: Schema.Types.ObjectId;
@@ -11,6 +12,7 @@ export interface Session extends SoftDeleteDocument {
 
 export const SessionSchema = new Schema<Session>({
   sessionId: { type: String, required: true, unique: true },
+  username: { type: String, required: true, unique: true },
   isGuest: { type: Boolean, required: true },
   createdAt: { type: Date, default: Date.now },
   ipAddress: { type: Schema.Types.ObjectId, ref: 'IPAddress', required: true },

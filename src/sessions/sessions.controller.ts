@@ -50,6 +50,17 @@ export class SessionsController {
     };
   }
 
+  @Get('check-username/:username')
+  async checkUsername(@Param('username') username: string) {
+    this.logger.log(`Check username - Username: ${username}`);
+
+    const isUnique = await this.sessionsService.isUsernameUnique(username);
+    return {
+      statusCode: HttpStatus.OK,
+      data: { isUnique },
+    };
+  }
+
   @Get(':sessionId')
   async getSession(@Param('sessionId') sessionId: string) {
     this.logger.log(`Check session - Session ID: ${sessionId}`);
@@ -70,6 +81,31 @@ export class SessionsController {
     return {
       statusCode: HttpStatus.OK,
       data: { isGuest: false },
+    };
+  }
+
+  @Post('change-username/:sessionId')
+  async changeUsername(
+    @Param('sessionId') sessionId: string,
+    @Body() body: { newUsername: string },
+  ) {
+    const { newUsername } = body;
+
+    this.logger.log(`New Username: ${newUsername}`);
+
+    const isUnique = await this.sessionsService.isUsernameUnique(newUsername);
+
+    if (!isUnique) {
+      return {
+        statusCode: HttpStatus.BAD_REQUEST,
+        message: 'Username already taken',
+      };
+    }
+
+    await this.sessionsService.updateUsername(sessionId, newUsername);
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Username updated successfully',
     };
   }
 }

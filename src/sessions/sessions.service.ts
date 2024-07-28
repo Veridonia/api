@@ -44,4 +44,16 @@ export class SessionsService {
   async findSession(sessionId: string): Promise<Session | null> {
     return this.sessionModel.findOne({ sessionId }).populate('ipAddress');
   }
+
+  async isUsernameUnique(username: string): Promise<boolean> {
+    const sessionsCount = await this.sessionModel.countDocuments({ username });
+    return sessionsCount === 0;
+  }
+
+  async updateUsername(sessionId: string, newUsername: string) {
+    return await this.sessionModel.updateOne(
+      { sessionId },
+      { username: newUsername },
+    );
+  }
 }
